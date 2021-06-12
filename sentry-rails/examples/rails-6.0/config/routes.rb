@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get 'connect_trace', to: 'welcome#connect_trace'
   get 'view_error', to: 'welcome#view_error'
+  get 'js_error', to: 'welcome#js_error'
   get 'worker_error', to: 'welcome#worker_error'
   get 'job_error', to: 'welcome#job_error'
 

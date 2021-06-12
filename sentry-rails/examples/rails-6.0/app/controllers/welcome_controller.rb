@@ -16,6 +16,9 @@ class WelcomeController < ApplicationController
   def view_error
   end
 
+  def js_error
+  end
+
   def worker_error
     ErrorWorker.perform_async
     render plain: "success"
