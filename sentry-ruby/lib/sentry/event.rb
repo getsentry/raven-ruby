@@ -10,17 +10,18 @@ require 'sentry/utils/request_id'
 module Sentry
   class Event
     ATTRIBUTES = %i(
-      event_id level timestamp
-      release environment server_name modules
+      event_id release environment server_name modules
       message user tags contexts extra
       fingerprint breadcrumbs backtrace transaction
-      platform sdk type
-    )
+      platform sdk
+    ).freeze
+    HASH_ATTRIBUTES = [*ATTRIBUTES, :level, :timestamp, :type].freeze
 
     MAX_MESSAGE_SIZE_IN_BYTES = 1024 * 8
 
     attr_accessor(*ATTRIBUTES)
-    attr_reader :configuration, :request, :exception, :threads
+    attr_reader :configuration, :request, :exception, :threads, :level, :timestamp
+    attr_writer :type
 
     def initialize(configuration:, integration_meta: nil, message: nil)
       # this needs to go first because some setters rely on configuration
@@ -139,7 +140,7 @@ module Sentry
     private
 
     def serialize_attributes
-      self.class::ATTRIBUTES.each_with_object({}) do |att, memo|
+      self.class::HASH_ATTRIBUTES.each_with_object({}) do |att, memo|
         if value = public_send(att)
           memo[att] = value
         end
